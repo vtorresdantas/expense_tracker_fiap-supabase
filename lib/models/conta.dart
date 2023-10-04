@@ -1,5 +1,5 @@
 class Conta {
-  final int id;
+  late final int id;
   final String bancoId;
   final String descricao;
   final TipoConta tipoConta;

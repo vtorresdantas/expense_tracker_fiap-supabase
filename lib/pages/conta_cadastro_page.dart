@@ -1,13 +1,17 @@
 import 'package:expense_tracker/pages/bancos_select_page.dart';
+import 'package:expense_tracker/repository/contas_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../components/banco_select.dart';
 import '../models/banco.dart';
 import '../models/conta.dart';
 
 class ContaCadastroPage extends StatefulWidget {
-  const ContaCadastroPage({super.key});
+  final Conta? contaParaEdicao;
+
+  const ContaCadastroPage({super.key, this.contaParaEdicao});
 
   @override
   State<ContaCadastroPage> createState() => _ContaCadastroPageState();
@@ -15,11 +19,27 @@ class ContaCadastroPage extends StatefulWidget {
 
 class _ContaCadastroPageState extends State<ContaCadastroPage> {
   final descricaoController = TextEditingController();
+  User? user;
+  final contasRepo = ContasRepository();
 
   final _formKey = GlobalKey<FormState>();
 
   Banco? bancoSelecionado;
   TipoConta tipoContaSelecionada = TipoConta.contaCorrente;
+
+  @override
+  void initState() {
+    user = Supabase.instance.client.auth.currentUser;
+
+    final conta = widget.contaParaEdicao;
+
+    if (conta != null) {
+      bancoSelecionado = conta.bancoId as Banco?;
+      descricaoController.text = conta.descricao;
+      tipoContaSelecionada = conta.tipoConta;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +62,8 @@ class _ContaCadastroPageState extends State<ContaCadastroPage> {
                 _buildBancoSelect(),
                 const SizedBox(height: 30),
                 _buildButton(),
+                const SizedBox(height: 30),
+                _buildDetalhes(),
               ],
             ),
           ),
@@ -119,12 +141,86 @@ class _ContaCadastroPageState extends State<ContaCadastroPage> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
           final isValid = _formKey.currentState!.validate();
-          if (isValid) {}
+          if (isValid) {
+            //descrição
+            final descricao = descricaoController.text;
+
+            final conta = Conta(
+              bancoId: bancoSelecionado!,
+              descricao: descricao,
+              id: 0,
+              tipoConta: tipoContaSelecionada,
+            );
+
+            if (widget.contaParaEdicao == null) {
+              await _cadastrarConta(conta);
+            } else {
+              conta.id = widget.contaParaEdicao!.id;
+              await _alterarConta(conta);
+            }
+          }
         },
         child: const Text('Cadastrar'),
       ),
     );
+  }
+
+  TextFormField _buildDetalhes() {
+    return TextFormField(
+      controller: descricaoController,
+      decoration: const InputDecoration(
+        hintText: 'Detalhes da conta',
+        labelText: 'Detalhes',
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.multiline,
+      maxLines: 2,
+    );
+  }
+
+  Future<void> _cadastrarConta(Conta conta) async {
+    final scaffold = ScaffoldMessenger.of(context);
+    await contasRepo.cadastrarConta(conta).then((_) {
+      // Mensagem de Sucesso
+      scaffold.showSnackBar(SnackBar(
+        content: Text(
+          '${conta.tipoConta == TipoConta.contaCorrente ? 'Conta Corrente' : 'Conta Poupança'} cadastrada com sucesso',
+        ),
+      ));
+      Navigator.of(context).pop(true);
+    }).catchError((error) {
+      // Mensagem de Erro
+      scaffold.showSnackBar(SnackBar(
+        content: Text(
+          'Erro ao cadastrar ${conta.tipoConta == TipoConta.contaCorrente ? 'Conta Corrente' : 'Conta Poupança'}',
+        ),
+      ));
+
+      Navigator.of(context).pop(false);
+    });
+  }
+
+  Future<void> _alterarConta(Conta conta) async {
+    final scaffold = ScaffoldMessenger.of(context);
+    await contasRepo.alterarConta(conta).then((_) {
+      // Mensagem de Sucesso
+      scaffold.showSnackBar(SnackBar(
+        content: Text(
+          '${conta.tipoConta == TipoConta.contaCorrente ? 'Conta Corrente' : 'Conta Poupança'} alterada com sucesso',
+        ),
+      ));
+      Navigator.of(context).pop(true);
+    }).catchError((error) {
+      // Mensagem de Erro
+      scaffold.showSnackBar(SnackBar(
+        content: Text(
+          'Erro ao alterar ${conta.tipoConta == TipoConta.contaCorrente ? 'Conta Corrente' : 'Conta Poupança'}',
+        ),
+      ));
+
+      Navigator.of(context).pop(false);
+    });
   }
 }
