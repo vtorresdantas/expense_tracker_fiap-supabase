@@ -13,23 +13,28 @@ class ContasRepository {
     return contas;
   }
 
-  Future cadastrarConta(Conta conta) async {
+  Future<void> cadastrarConta(Conta conta) async {
     final supabase = Supabase.instance.client;
 
-    await supabase.from('contas').insert({
-      'banco': conta.bancoId,
-      'descricao': conta.descricao,
-      'tipo_Conta': conta.tipoConta,
-    });
+    try {
+      await supabase.from('contas').insert({
+        'descricao': conta.descricao,
+        'tipo_conta': conta.tipoConta.index, // Use index do enum
+        'banco': conta.bancoId,
+      });
+    } catch (error) {
+      print('Erro ao cadastrar conta: $error');
+      throw error; // Re-lança o erro para ser tratado onde a função é chamada
+    }
   }
 
   Future alterarConta(Conta conta) async {
     final supabase = Supabase.instance.client;
 
     await supabase.from('contas').update({
-      'banco': conta.bancoId,
       'descricao': conta.descricao,
-      'tipo_Conta': conta.tipoConta,
+      'tipo_conta': conta.tipoConta.index, // Use index do enum
+      'banco': conta.bancoId,
     }).match({'id': conta.id});
   }
 

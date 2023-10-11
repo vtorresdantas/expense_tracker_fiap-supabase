@@ -13,6 +13,8 @@ class ContasPage extends StatefulWidget {
 
 class _ContasPageState extends State<ContasPage> {
   final contasFuture = ContasRepository().listarContas();
+  final contasRepo = ContasRepository();
+  late Future<List<Conta>> futureContas;
 
   @override
   Widget build(BuildContext context) {
