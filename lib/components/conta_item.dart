@@ -5,7 +5,8 @@ import '../models/conta.dart';
 
 class ContaItem extends StatelessWidget {
   final Conta conta;
-  const ContaItem({super.key, required this.conta});
+  final void Function()? onTap;
+  const ContaItem({super.key, required this.conta, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,7 @@ class ContaItem extends StatelessWidget {
       ),
       title: Text(conta.descricao),
       subtitle: Text(bancosMap[conta.bancoId]?.nome ?? ''),
+      onTap: onTap,
     );
   }
 }

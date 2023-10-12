@@ -1,12 +1,12 @@
+import 'package:expense_tracker/components/transacao_item.dart';
+import 'package:expense_tracker/models/tipo_transacao.dart';
+import 'package:expense_tracker/models/transacao.dart';
 import 'package:expense_tracker/pages/transacao_cadastro_page.dart';
+
 import 'package:expense_tracker/repository/transacoes_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../components/transacao_item.dart';
-import '../models/tipo_transacao.dart';
-import '../models/transacao.dart';
 
 class TransacoesPage extends StatefulWidget {
   const TransacoesPage({super.key});
@@ -16,13 +16,21 @@ class TransacoesPage extends StatefulWidget {
 }
 
 class _TransacoesPageState extends State<TransacoesPage> {
+  // Repositório para operações relacionadas a transações
   final transacoesRepo = TransacoesReepository();
+
+  // Lista de transações que será carregada de forma assíncrona
   late Future<List<Transacao>> futureTransacoes;
+
+  // Usuário autenticado
   User? user;
 
   @override
   void initState() {
+    // Obtendo o usuário autenticado
     user = Supabase.instance.client.auth.currentUser;
+
+    // Inicializando a lista de transações
     futureTransacoes = transacoesRepo.listarTransacoes(userId: user?.id ?? '');
     super.initState();
   }
@@ -33,7 +41,7 @@ class _TransacoesPageState extends State<TransacoesPage> {
       appBar: AppBar(
         title: const Text('Transações'),
         actions: [
-          // create a filter menu action
+          // Menu pop-up para filtrar as transações
           PopupMenuButton(
             itemBuilder: (context) {
               return [
@@ -75,18 +83,22 @@ class _TransacoesPageState extends State<TransacoesPage> {
         future: futureTransacoes,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
+            // Indicador de carregamento enquanto as transações estão sendo carregadas
             return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
+            // Exibindo uma mensagem em caso de erro
             return const Center(
               child: Text("Erro ao carregar as transações"),
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            // Exibindo uma mensagem se não houver transações ou se a lista estiver vazia
             return const Center(
               child: Text("Nenhuma transação cadastrada"),
             );
           } else {
+            // Construindo a lista de transações
             final transacoes = snapshot.data!;
             return ListView.separated(
               itemCount: transacoes.length,
@@ -108,6 +120,7 @@ class _TransacoesPageState extends State<TransacoesPage> {
                           ) as bool?;
 
                           if (result == true) {
+                            // Atualizando a lista de transações após a edição
                             setState(() {
                               futureTransacoes =
                                   transacoesRepo.listarTransacoes(
@@ -123,8 +136,10 @@ class _TransacoesPageState extends State<TransacoesPage> {
                       ),
                       SlidableAction(
                         onPressed: (context) async {
+                          // Excluindo a transação
                           await transacoesRepo.excluirTransacao(transacao.id);
 
+                          // Atualizando a lista de transações após a exclusão
                           setState(() {
                             transacoes.removeAt(index);
                           });
@@ -155,11 +170,13 @@ class _TransacoesPageState extends State<TransacoesPage> {
       floatingActionButton: FloatingActionButton(
         heroTag: "transacao-cadastro",
         onPressed: () async {
+          // Navegando para a página de cadastro de transação
           final result =
               await Navigator.pushNamed(context, '/transacao-cadastro')
                   as bool?;
 
           if (result == true) {
+            // Atualizando a lista de transações após a adição de uma nova transação
             setState(() {
               futureTransacoes = transacoesRepo.listarTransacoes(
                 userId: user?.id ?? '',

@@ -8,7 +8,9 @@ import '../models/banco.dart';
 import '../models/conta.dart';
 
 class ContaCadastroPage extends StatefulWidget {
-  const ContaCadastroPage({super.key});
+  final Conta? contaParaEdicao;
+
+  const ContaCadastroPage({super.key, this.contaParaEdicao});
 
   @override
   State<ContaCadastroPage> createState() => _ContaCadastroPageState();
@@ -17,6 +19,8 @@ class ContaCadastroPage extends StatefulWidget {
 class _ContaCadastroPageState extends State<ContaCadastroPage> {
   final descricaoController = TextEditingController();
   final contasRepo = ContasRepository();
+
+  final detalhesController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -89,6 +93,19 @@ class _ContaCadastroPageState extends State<ContaCadastroPage> {
         }
         return null;
       },
+    );
+  }
+
+  TextFormField _buildDetalhes() {
+    return TextFormField(
+      controller: detalhesController,
+      decoration: const InputDecoration(
+        hintText: 'Detalhes da transação',
+        labelText: 'Detalhes',
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: TextInputType.multiline,
+      maxLines: 2,
     );
   }
 
@@ -165,7 +182,7 @@ class _ContaCadastroPageState extends State<ContaCadastroPage> {
   Future<void> _alterarConta(Conta conta) async {
     final scaffold = ScaffoldMessenger.of(context);
     await contasRepo.alterarConta(conta).then((_) {
-     // Mensagem de Sucesso
+      // Mensagem de Sucesso
       scaffold.showSnackBar(SnackBar(
         content: Text(
           '${conta.tipoConta == TipoConta.contaCorrente ? 'Conta Corrente' : (conta.tipoConta == TipoConta.contaInvestimento ? 'Conta Investimento' : 'Conta Poupança')} alterada com sucesso',
