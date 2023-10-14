@@ -8,6 +8,7 @@ import 'package:expense_tracker/pages/transacao_cadastro_page.dart';
 import 'package:expense_tracker/pages/transacao_detalhes_page.dart';
 import 'package:expense_tracker/pages/transferencia_cadastro_page.dart';
 import 'package:expense_tracker/pages/transferencia_page.dart';
+import 'package:expense_tracker/pages/usuario_cadastro_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
         "/conta-cadastro": (context) => const ContaCadastroPage(),
         "/conta-detalhes": (context) => ContaDetalhesPage(),
         "/transferencia": (context) => TransferenciasPage(),
-        "/transferencia-cadastro": (context) => TransferenciaCadastroPage()
+        "/transferencia-cadastro": (context) => TransferenciaCadastroPage(),
+        "/usuario-cadastro": (context) => UsuarioCadastroPage()
       },
       initialRoute: "/splash",
     );

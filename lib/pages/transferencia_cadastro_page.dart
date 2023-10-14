@@ -1,12 +1,15 @@
 import 'package:expense_tracker/components/conta_select.dart';
+import 'package:expense_tracker/components/usuario_select.dart';
 
 import 'package:expense_tracker/models/conta.dart';
 import 'package:expense_tracker/models/tipo_transferencia.dart';
 import 'package:expense_tracker/models/transferencia.dart';
 import 'package:expense_tracker/models/usuario.dart';
-import 'package:expense_tracker/pages/contas_select_page.dart';
 
+import 'package:expense_tracker/pages/contas_select_page.dart';
+import 'package:expense_tracker/pages/usuario_select_page.dart';
 import 'package:expense_tracker/repository/transferencias_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:intl/intl.dart';
@@ -45,6 +48,8 @@ class _TransferenciaCadastroPageState extends State<TransferenciaCadastroPage> {
     if (transferencia != null) {
       contaSelecionada = transferencia.conta;
 
+      usuarioSelecionado = transferencia.usuario;
+
       descricaoController.text = transferencia.descricao;
 
       tipoTransferenciaSelecionada = transferencia.tipoTransferencia;
@@ -73,7 +78,11 @@ class _TransferenciaCadastroPageState extends State<TransferenciaCadastroPage> {
               children: [
                 _buildDescricao(),
                 const SizedBox(height: 30),
+                _buildTipoTransferencia(),
+                const SizedBox(height: 30),
                 _buildContaSelect(),
+                const SizedBox(height: 30),
+                _buildUsuarioSelect(),
                 const SizedBox(height: 30),
                 _buildValor(),
                 const SizedBox(height: 30),
@@ -101,6 +110,25 @@ class _TransferenciaCadastroPageState extends State<TransferenciaCadastroPage> {
         if (result != null) {
           setState(() {
             contaSelecionada = result;
+          });
+        }
+      },
+    );
+  }
+
+  UsuarioSelect _buildUsuarioSelect() {
+    return UsuarioSelect(
+      usuario: usuarioSelecionado,
+      onTap: () async {
+        final result = await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const UsuarioSelectPage(),
+          ),
+        ) as Usuario?;
+
+        if (result != null) {
+          setState(() {
+            usuarioSelecionado = result;
           });
         }
       },
@@ -238,6 +266,7 @@ class _TransferenciaCadastroPageState extends State<TransferenciaCadastroPage> {
                 userId: userId,
                 descricao: descricao,
                 tipoTransferencia: tipoTransferenciaSelecionada,
+                usuario: usuarioSelecionado!,
                 valor: valor.toDouble(),
                 data: data,
                 conta: contaSelecionada!);
@@ -258,13 +287,15 @@ class _TransferenciaCadastroPageState extends State<TransferenciaCadastroPage> {
   Future<void> _cadastrarTransferencia(Transferencia transferencia) async {
     final Scaffold = ScaffoldMessenger.of(context);
     await transferenciaRepo.cadastrarTransferencia(transferencia).then((_) {
-      Scaffold.showSnackBar(const SnackBar(
-        content: Text('Transferência cadastrada com sucesso'),
+      Scaffold.showSnackBar(SnackBar(
+        content: Text(
+            'Transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Despesa'} cadastrada com sucesso'),
       ));
       Navigator.of(context).pop(true);
     }).catchError((error) {
-      Scaffold.showSnackBar(const SnackBar(
-        content: Text('Erro ao cadastrar transferência'),
+      Scaffold.showSnackBar(SnackBar(
+        content: Text(
+            'Erro ao cadastrar transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Despesa'}'),
       ));
 
       Navigator.of(context).pop(false);
@@ -274,13 +305,15 @@ class _TransferenciaCadastroPageState extends State<TransferenciaCadastroPage> {
   Future<void> _alterarTransferencia(Transferencia transferencia) async {
     final Scaffold = ScaffoldMessenger.of(context);
     await transferenciaRepo.alterarTransferencia(transferencia).then((_) {
-      Scaffold.showSnackBar(const SnackBar(
-        content: Text('Transferência alterada com sucesso'),
+      Scaffold.showSnackBar(SnackBar(
+        content: Text(
+            'Transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Despesa'} alterada com sucesso'),
       ));
       Navigator.of(context).pop(true);
     }).catchError((error) {
-      Scaffold.showSnackBar(const SnackBar(
-        content: Text('Erro ao alterar transferência '),
+      Scaffold.showSnackBar(SnackBar(
+        content: Text(
+            'Erro ao alterar transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Despesa'}'),
       ));
 
       Navigator.of(context).pop(false);

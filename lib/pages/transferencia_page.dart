@@ -1,4 +1,5 @@
 // Importando pacotes e componentes necessários
+import 'package:expense_tracker/models/tipo_transferencia.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -40,6 +41,46 @@ class _TransferenciasPageState extends State<TransferenciasPage> {
       // Barra superior com o título "Transferências"
       appBar: AppBar(
         title: const Text('Transferências'),
+        actions: [
+          // Menu pop-up para filtrar as transações
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  child: const Text('Todas'),
+                  onTap: () {
+                    setState(() {
+                      futureTransferencias = transferenciasRepo
+                          .listarTransferencias(userId: user?.id ?? '');
+                    });
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text('Enviadas'),
+                  onTap: () {
+                    setState(() {
+                      futureTransferencias =
+                          transferenciasRepo.listarTransferencias(
+                              userId: user?.id ?? '',
+                              tipoTransferencia: TipoTransferencia.enviada);
+                    });
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text('Recebidas'),
+                  onTap: () {
+                    setState(() {
+                      futureTransferencias =
+                          transferenciasRepo.listarTransferencias(
+                              userId: user?.id ?? '',
+                              tipoTransferencia: TipoTransferencia.recebida);
+                    });
+                  },
+                ),
+              ];
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<List<Transferencia>>(
         future: futureTransferencias,
