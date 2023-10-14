@@ -13,6 +13,19 @@ class _ContaDetalhesPageState extends State<ContaDetalhesPage> {
   Widget build(BuildContext context) {
     final conta = ModalRoute.of(context)!.settings.arguments as Conta;
 
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(conta.descricao),
+      ),
+      body: SingleChildScrollView(
+          child: Column(
+        children: [
+          ListTile(
+            title: const Text('Tipo de conta'),
+            subtitle: Text(conta.tipoConta.name),
+          )
+        ],
+      )),
+    );
   }
 }

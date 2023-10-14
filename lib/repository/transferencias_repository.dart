@@ -7,7 +7,7 @@ class TransferenciasRepository {
     final supabase = Supabase.instance.client;
 
     var query =
-        supabase.from('Transferencias').select<List<Map<String, dynamic>>>('''
+        supabase.from('transferencias').select<List<Map<String, dynamic>>>('''
             *,
             contas (
               *
@@ -17,38 +17,40 @@ class TransferenciasRepository {
     var data = await query;
 
     final list = data.map((map) {
-      return Transferencia.fromMap(map);
+      return Transferencia.fromMap(map as Map<String, dynamic>);
     }).toList();
 
     return list;
   }
 
-  Future cadastrarTransferencia(Transferencia Transferencia) async {
+  Future<void> cadastrarTransferencia(Transferencia transferencia) async {
     final supabase = Supabase.instance.client;
 
-    await supabase.from('Transferencias').insert({
-      'descricao': Transferencia.descricao,
-      'user_id': Transferencia.userId,
-      'valor': Transferencia.valor,
-      'data_Transferencia': Transferencia.data.toIso8601String(),
-      'conta_id': Transferencia.conta.id,
+    await supabase.from('transferencias').insert({
+      'descricao': transferencia.descricao,
+      'user_id': transferencia.userId,
+      'tipo_transferencia': transferencia.tipoTransferencia.index,
+      'valor': transferencia.valor,
+      'data_transferencia': transferencia.data.toIso8601String(),
+      'conta_id': transferencia.conta.id,
     });
   }
 
-  Future alterarTransferencia(Transferencia Transferencia) async {
+  Future<void> alterarTransferencia(Transferencia transferencia) async {
     final supabase = Supabase.instance.client;
 
-    await supabase.from('Transferencias').update({
-      'descricao': Transferencia.descricao,
-      'valor': Transferencia.valor,
-      'data_Transferencia': Transferencia.data.toIso8601String(),
-      'conta_id': Transferencia.conta.id,
-    }).match({'id': Transferencia.id});
+    await supabase.from('transferencias').update({
+      'descricao': transferencia.descricao,
+      'valor': transferencia.valor,
+      'tipo_transferencia': transferencia.tipoTransferencia.index,
+      'data_transferencia': transferencia.data.toIso8601String(),
+      'conta_id': transferencia.conta.id,
+    }).match({'id': transferencia.id});
   }
 
-  Future excluirTransferencia(int id) async {
+  Future<void> excluirTransferencia(int id) async {
     final supabase = Supabase.instance.client;
 
-    await supabase.from('Transferencias').delete().match({'id': id});
+    await supabase.from('transferencias').delete().match({'id': id});
   }
 }

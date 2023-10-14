@@ -1,0 +1,1 @@
+enum TipoTransferencia { enviada, recebida }

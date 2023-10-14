@@ -6,6 +6,8 @@ import 'package:expense_tracker/pages/registar_page.dart';
 import 'package:expense_tracker/pages/splash_page.dart';
 import 'package:expense_tracker/pages/transacao_cadastro_page.dart';
 import 'package:expense_tracker/pages/transacao_detalhes_page.dart';
+import 'package:expense_tracker/pages/transferencia_cadastro_page.dart';
+import 'package:expense_tracker/pages/transferencia_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -40,7 +42,9 @@ class MyApp extends StatelessWidget {
         "/transacao-detalhes": (context) => const TransacaoDetalhesPage(),
         "/transacao-cadastro": (context) => const TransacaoCadastroPage(),
         "/conta-cadastro": (context) => const ContaCadastroPage(),
-        "/conta-detalhes": (context) => ContaDetalhesPage()
+        "/conta-detalhes": (context) => ContaDetalhesPage(),
+        "/transferencia": (context) => TransferenciasPage(),
+        "/transferencia-cadastro": (context) => TransferenciaCadastroPage()
       },
       initialRoute: "/splash",
     );

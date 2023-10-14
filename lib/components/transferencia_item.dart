@@ -1,6 +1,5 @@
+import 'package:expense_tracker/models/transferencia.dart';
 import 'package:flutter/material.dart';
-
-import '../models/Transferencia.dart';
 
 class TransferenciaItem extends StatelessWidget {
   final Transferencia transferencia;

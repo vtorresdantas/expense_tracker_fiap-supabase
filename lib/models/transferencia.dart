@@ -1,10 +1,12 @@
 import 'package:expense_tracker/models/conta.dart';
+import 'package:expense_tracker/models/tipo_transferencia.dart';
 
 class Transferencia {
   int id;
   String userId;
   DateTime data;
   String descricao;
+  TipoTransferencia tipoTransferencia;
   Conta conta;
   double valor;
 
@@ -12,6 +14,7 @@ class Transferencia {
     required this.id,
     required this.data,
     required this.descricao,
+    required this.tipoTransferencia,
     required this.conta,
     required this.userId,
     required this.valor,
@@ -22,6 +25,7 @@ class Transferencia {
       id: map['id'],
       userId: map['user_id'],
       data: DateTime.parse(map['data_transferencia']),
+      tipoTransferencia: TipoTransferencia.values[map['tipo_transferencia']],
       descricao: map['descricao'],
       conta: Conta.fromMap(map['contas']),
       valor: map['valor'],
