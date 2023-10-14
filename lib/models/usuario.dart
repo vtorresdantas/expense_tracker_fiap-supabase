@@ -1,13 +1,21 @@
 class Usuario {
-  final String id;
-  final String nome;
-  final String logo;
+  int id;
+  String nome;
+  String email;
+  String logo;
 
-  const Usuario(this.id, this.nome, this.logo);
+  Usuario(
+      {required this.id,
+      required this.nome,
+      required this.email,
+      required this.logo});
+
+  factory Usuario.fromMap(Map<String, dynamic> map) {
+    return Usuario(
+      id: map['id'],
+      nome: map['nome'],
+      email: map['email'],
+      logo: map['logo'],
+    );
+  }
 }
-
-const Map<String, Usuario> usuarioMap = {
-  "mulher": Usuario('mulher', 'Mulher', 'mulher.png'),
-  "ladrao": Usuario('ladrao', 'Ladrão', 'ladrao.png'),
-  "estudante": Usuario('estudante', 'Estudante', 'estudante.png'),
-};

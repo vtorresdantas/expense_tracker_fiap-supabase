@@ -5,6 +5,7 @@ import 'package:expense_tracker/pages/contas_page.dart';
 import 'package:expense_tracker/pages/dashboard_page.dart';
 import 'package:expense_tracker/pages/transacoes_page.dart';
 import 'package:expense_tracker/pages/transferencia_page.dart';
+import 'package:expense_tracker/pages/usuarios_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage> {
         TransacoesPage(),
         ContasPage(),
         CategoriasPage(),
+        UsuariosPage(),
       ],
     );
   }
@@ -71,6 +73,8 @@ class _HomePageState extends State<HomePage> {
           icon: Icon(Ionicons.wallet_outline), label: 'Contas'),
       BottomNavigationBarItem(
           icon: Icon(Ionicons.list_outline), label: 'Categorias'),
+      BottomNavigationBarItem(
+          icon: Icon(Ionicons.person_add_outline), label: 'Usuários'),
     ];
 
     return BottomNavigationBar(
