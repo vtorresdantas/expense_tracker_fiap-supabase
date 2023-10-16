@@ -1,10 +1,10 @@
 import 'package:expense_tracker/components/conta_item.dart';
-import 'package:expense_tracker/components/usuario_item.dart';
+
 import 'package:expense_tracker/models/tipo_transferencia.dart';
 import 'package:expense_tracker/models/transferencia.dart';
-import 'package:expense_tracker/models/usuario.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:intl/intl.dart';
 
 class TransferenciaDetalhesPage extends StatefulWidget {
@@ -47,7 +47,7 @@ class _TransferenciaDetalhesPageState extends State<TransferenciaDetalhesPage> {
                   .format(transferencia.valor)),
             ),
             ListTile(
-              title: const Text('Categoria'),
+              title: const Text('Usuário'),
               subtitle: Text(transferencia.usuario.nome),
             ),
             ListTile(

@@ -289,13 +289,13 @@ class _TransferenciaCadastroPageState extends State<TransferenciaCadastroPage> {
     await transferenciaRepo.cadastrarTransferencia(transferencia).then((_) {
       Scaffold.showSnackBar(SnackBar(
         content: Text(
-            'Transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Despesa'} cadastrada com sucesso'),
+            'Transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Recebida'} cadastrada com sucesso'),
       ));
       Navigator.of(context).pop(true);
     }).catchError((error) {
       Scaffold.showSnackBar(SnackBar(
         content: Text(
-            'Erro ao cadastrar transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Despesa'}'),
+            'Erro ao cadastrar transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Recebida'}'),
       ));
 
       Navigator.of(context).pop(false);
@@ -307,13 +307,13 @@ class _TransferenciaCadastroPageState extends State<TransferenciaCadastroPage> {
     await transferenciaRepo.alterarTransferencia(transferencia).then((_) {
       Scaffold.showSnackBar(SnackBar(
         content: Text(
-            'Transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Despesa'} alterada com sucesso'),
+            'Transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Recebida'} alterada com sucesso'),
       ));
       Navigator.of(context).pop(true);
     }).catchError((error) {
       Scaffold.showSnackBar(SnackBar(
         content: Text(
-            'Erro ao alterar transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Despesa'}'),
+            'Erro ao alterar transferência ${transferencia.tipoTransferencia == TipoTransferencia.enviada ? 'Enviada' : 'Recebida'}'),
       ));
 
       Navigator.of(context).pop(false);

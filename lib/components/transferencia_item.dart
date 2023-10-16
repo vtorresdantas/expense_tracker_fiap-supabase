@@ -14,7 +14,7 @@ class TransferenciaItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(transferencia.descricao),
-      subtitle: Text(transferencia.usuario.nome),
+      subtitle: Text(DateFormat('MM/dd/yyyy').format(transferencia.data)),
       trailing: Text(
         NumberFormat.simpleCurrency(locale: 'pt_BR')
             .format(transferencia.valor),
